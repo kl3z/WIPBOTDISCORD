@@ -3,23 +3,17 @@ from discord.ext import commands
 from discord.ui import View, Select, Button, Modal, TextInput
 from datetime import datetime, timedelta
 import os
-
 from dotenv import load_dotenv
 load_dotenv()
-
 intents = discord.Intents.default()
 intents.message_content = True
 intents.reactions = True
 intents.guilds = True
 intents.members = True
-
 bot = commands.Bot(command_prefix="!", intents=intents)
-
-# Emojis das roles
 EMOJI_TANK = "🛡️"
 EMOJI_HEALER = "💚"
 EMOJI_DPS = "⚔️"
-
 DUNGEONS = [
     "Eco-Dome Al'dani",
     "Ara-Kara, City of Echoes",
@@ -30,13 +24,8 @@ DUNGEONS = [
     "Tazavesh, the Veiled Market: Streets of Wonder",
     "Tazavesh, the Veiled Market: So'leah's Gambit"
 ]
-
 DIFICULDADES = [str(i) for i in range(0, 21)] + ["20+"]
-
-# Limites por role
 LIMITES = {"Tank": 1, "Healer": 1, "DPS": 3}
-
-# Estado global
 grupo_mensagem_id = None
 inscritos = {"Tank": [], "Healer": [], "DPS": []}
 classes_escolhidas = {}
@@ -44,12 +33,7 @@ dungeon_escolhida = DUNGEONS[2]
 dificuldade_escolhida = "10"
 data_formatada = "06/08/2025"
 hora_escolhida = "22:00"
-
-# Controlos de alteração
 alteracoes_feitas = {"dungeon": False, "dificuldade": False, "data": False}
-
-# Embed
-
 def format_grupo_embed():
     def format_role(role):
         players = inscritos[role]
@@ -60,17 +44,16 @@ def format_grupo_embed():
     embed = discord.Embed(
         title=f"Dungeon: {dungeon_escolhida}",
         description=(
-            f"Difficulty: {dificuldade_escolhida}\n"
-            f"Scheduled: {data_formatada} às {hora_escolhida}"
+            f"Dificuldade: {dificuldade_escolhida}\n"
+            f"Marcação: {data_formatada} às {hora_escolhida}"
         ),
         color=0x00ffcc
     )
     embed.add_field(name=f"{EMOJI_TANK} Tank", value=format_role("Tank"), inline=False)
     embed.add_field(name=f"{EMOJI_HEALER} Healer", value=format_role("Healer"), inline=False)
     embed.add_field(name=f"{EMOJI_DPS} DPS", value=format_role("DPS"), inline=False)
+    embed.set_footer(text="Bot created by Kl3z")
     return embed
-
-# Classes disponíveis por role
 CLASSES_POR_ROLE = {
     "Tank": [
         ("Protection Paladin",    "https://wow.zamimg.com/images/wow/icons/large/spell_holy_avengershield.jpg"),
@@ -114,8 +97,6 @@ CLASSES_POR_ROLE = {
     ]
 }
 
-
-# Dropdown de seleção de classe
 class ClasseDropdown(Select):
     def __init__(self, role, jogador):
         self.jogador = jogador
@@ -132,8 +113,6 @@ class ClasseView(View):
     def __init__(self, role, jogador):
         super().__init__(timeout=60)
         self.add_item(ClasseDropdown(role, jogador))
-
-# Dropdowns principais
 class DungeonDropdown(Select):
     def __init__(self):
         options = [discord.SelectOption(label=d, value=d) for d in DUNGEONS]
@@ -173,8 +152,6 @@ class DificuldadeDropdown(Select):
             nova_view.clear_items()
         await mensagem.edit(embed=format_grupo_embed(), view=nova_view)
         await interaction.response.send_message(f"Dificuldade atualizada para **+{dificuldade_escolhida}**", ephemeral=True)
-
-# Modal de data/hora
 class DataModal(Modal, title="Definir Data da Dungeon"):
     dia = TextInput(label="Dia do mês (1-31)", placeholder="Ex: 6", max_length=2)
     hora = TextInput(label="Hora (HH:MM)", placeholder="Ex: 22:30", max_length=5)
@@ -215,7 +192,6 @@ class DataModal(Modal, title="Definir Data da Dungeon"):
         await mensagem.edit(embed=format_grupo_embed(), view=nova_view)
         await interaction.response.send_message(f"Data agendada: **{data_formatada} às {hora_escolhida}**", ephemeral=True)
 
-# Botão para abrir o modal
 class BotaoData(Button):
     def __init__(self):
         super().__init__(label="🗓️ Definir Data", style=discord.ButtonStyle.primary)
@@ -223,7 +199,6 @@ class BotaoData(Button):
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.send_modal(DataModal())
 
-# View principal
 class DungeonView(View):
     def __init__(self):
         super().__init__(timeout=None)
@@ -234,7 +209,6 @@ class DungeonView(View):
         if not alteracoes_feitas["data"]:
             self.add_item(BotaoData())
 
-# Comando principal
 @bot.command(name="criargrupo")
 async def criar_grupo(ctx):
     global grupo_mensagem_id, inscritos, dungeon_escolhida, dificuldade_escolhida, data_formatada, hora_escolhida, alteracoes_feitas
@@ -253,7 +227,6 @@ async def criar_grupo(ctx):
     await mensagem.add_reaction(EMOJI_HEALER)
     await mensagem.add_reaction(EMOJI_DPS)
 
-# Reações
 @bot.event
 async def on_raw_reaction_add(payload):
     if payload.message_id != grupo_mensagem_id or payload.user_id == bot.user.id:
@@ -310,10 +283,13 @@ async def on_raw_reaction_remove(payload):
         channel = bot.get_channel(payload.channel_id)
         mensagem = await channel.fetch_message(payload.message_id)
         await mensagem.edit(embed=format_grupo_embed())
+        if role in CLASSES_POR_ROLE:
+            await channel.send(f"{member.mention}, escolhe a tua classe:", view=ClasseView(role, nome))
+        if (len(inscritos["Tank"]) == LIMITES["Tank"] and len(inscritos["Healer"]) == LIMITES["Healer"] and len(inscritos["DPS"]) == LIMITES["DPS"]):
+            await channel.send("🎉 Dungeon Encerrada! Parabéns <@Rixa>, felicidades 🎉")
 
 @bot.event
 async def on_ready():
     print(f"Bot ligado como {bot.user}")
 
 bot.run(os.getenv("DISCORD_TOKEN"))
-
