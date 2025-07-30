@@ -1,19 +1,31 @@
-🛡️ WoW Dungeon Organizer Bot — by kl3z
-Bot dos Work-in-Progress para Discord que permite os jogadores organizarem-se em grupos para dungeon de forma interativa e automática.
+# 🛡️ WIP Dungeon Organizer Bot — by kl3z
 
-✨ Funcionalidades
-Reações por role: jogadores escolhem ser 🛡️ Tank, 💚 Healer ou ⚔️ DPS.
+Bot para Discord criado para a comunidade **Work-in-Progress (WIP)**, que permite aos jogadores de **World of Warcraft** organizarem-se automaticamente em grupos para dungeons, de forma prática e interativa.
 
-Limites automáticos por role: 1 Tank, 1 Healer e 3 DPS por grupo.
+---
 
-Dropdown de classes personalizadas com ícones para cada role.
+## ✨ Funcionalidades
 
-Escolha de dungeon e dificuldade com menus dropdown (0 a 20+).
+- 🎭 **Reações por role** – jogadores escolhem ser:
+  - 🛡️ **Tank**
+  - 💚 **Healer**
+  - ⚔️ **DPS**
 
-Definição de data e hora através de modal interativo.
+- 📊 **Limites automáticos por role**:
+  - 1 Tank, 1 Healer e 3 DPS por grupo.
 
-Atualização em tempo real do embed com os inscritos e classes escolhidas.
+- 🧙 **Seleção de classes** com dropdowns personalizados, incluindo ícones e nomes temáticos de WoW.
 
-⚙️ Comando principal
+- 🏰 **Escolha da dungeon e dificuldade** (de +0 a +20+) via menus interativos.
 
+- 📅 **Definição de data e hora** através de modal intuitivo.
+
+- ♻️ **Atualização dinâmica** do embed com os inscritos e respetivas classes.
+
+---
+
+## ⚙️ Comando principal
+
+```bash
 !criargrupo
+
