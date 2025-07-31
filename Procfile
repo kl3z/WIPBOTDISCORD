@@ -1,1 +1,1 @@
-worker: python WIPBOT.py
+python3 WIPBOT.py
