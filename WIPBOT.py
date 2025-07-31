@@ -297,9 +297,11 @@ async def on_raw_reaction_remove(payload):
         ):
             await channel.send("🎉 Dungeon Encerrada! Parabéns <@Rixa>, felicidades 🎉")
 
-
 @bot.event
 async def on_ready():
     print(f"Bot ligado como {bot.user}")
-
+if os.getenv("RAILWAY_ENVIRONMENT") is None:
+    from dotenv import load_dotenv
+    load_dotenv()
 bot.run(os.getenv("DISCORD_TOKEN"))
+
