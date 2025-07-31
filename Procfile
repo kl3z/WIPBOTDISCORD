@@ -1,1 +1,1 @@
-python WIPBOT.py
+web: python WIPBOT.py
