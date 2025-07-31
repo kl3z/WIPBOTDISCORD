@@ -96,23 +96,6 @@ CLASSES_POR_ROLE = {
         ("Frost Mage",            "https://wow.zamimg.com/images/wow/icons/large/spell_frost_frostbolt02.jpg")
     ]
 }
-
-class ClasseDropdown(Select):
-    def __init__(self, role, jogador):
-        self.jogador = jogador
-        options = [discord.SelectOption(label=nome, value=nome, description="", emoji=None) for nome, _ in CLASSES_POR_ROLE[role]]
-        super().__init__(placeholder=f"Escolhe a classe ({role})", min_values=1, max_values=1, options=options)
-
-    async def callback(self, interaction: discord.Interaction):
-        classes_escolhidas[self.jogador] = self.values[0]
-        mensagem = await interaction.channel.fetch_message(grupo_mensagem_id)
-        await mensagem.edit(embed=format_grupo_embed())
-        await interaction.response.send_message(f"Classe escolhida: **{self.values[0]}**", ephemeral=True)
-
-class ClasseView(View):
-    def __init__(self, role, jogador):
-        super().__init__(timeout=60)
-        self.add_item(ClasseDropdown(role, jogador))
 class DungeonDropdown(Select):
     def __init__(self):
         options = [discord.SelectOption(label=d, value=d) for d in DUNGEONS]
@@ -131,7 +114,7 @@ class DungeonDropdown(Select):
         if all(alteracoes_feitas.values()):
             nova_view.clear_items()
         await mensagem.edit(embed=format_grupo_embed(), view=nova_view)
-        await interaction.response.send_message(f"Dungeon atualizada para **{dungeon_escolhida}**", ephemeral=True)
+        await interaction.response.defer()
 
 class DificuldadeDropdown(Select):
     def __init__(self):
@@ -151,7 +134,7 @@ class DificuldadeDropdown(Select):
         if all(alteracoes_feitas.values()):
             nova_view.clear_items()
         await mensagem.edit(embed=format_grupo_embed(), view=nova_view)
-        await interaction.response.send_message(f"Dificuldade atualizada para **+{dificuldade_escolhida}**", ephemeral=True)
+        await interaction.response.defer()
 class DataModal(Modal, title="Definir Data da Dungeon"):
     dia = TextInput(label="Dia do mês (1-31)", placeholder="Ex: 6", max_length=2)
     hora = TextInput(label="Hora (HH:MM)", placeholder="Ex: 22:30", max_length=5)
@@ -190,7 +173,7 @@ class DataModal(Modal, title="Definir Data da Dungeon"):
         if all(alteracoes_feitas.values()):
             nova_view.clear_items()
         await mensagem.edit(embed=format_grupo_embed(), view=nova_view)
-        await interaction.response.send_message(f"Data agendada: **{data_formatada} às {hora_escolhida}**", ephemeral=True)
+        await interaction.response.defer()
 
 class BotaoData(Button):
     def __init__(self):
@@ -208,6 +191,25 @@ class DungeonView(View):
             self.add_item(DificuldadeDropdown())
         if not alteracoes_feitas["data"]:
             self.add_item(BotaoData())
+class ClasseDropdown(Select):
+    def __init__(self, role, jogador):
+        self.jogador = jogador
+        options = [discord.SelectOption(label=nome, value=nome) for nome, _ in CLASSES_POR_ROLE[role]]
+        super().__init__(placeholder=f"Escolhe a classe ({role})", options=options)
+
+    async def callback(self, interaction: discord.Interaction):
+        classes_escolhidas[self.jogador] = self.values[0]
+        canal = discord.utils.get(bot.get_all_channels(), id=self.ctx_channel_id)
+        mensagem = await canal.fetch_message(grupo_mensagem_id)
+        await mensagem.edit(embed=format_grupo_embed())
+        await interaction.response.defer()
+
+class ClasseView(View):
+    def __init__(self, role, jogador, ctx_channel_id):
+        super().__init__()
+        dropdown = ClasseDropdown(role, jogador)
+        dropdown.ctx_channel_id = ctx_channel_id
+        self.add_item(dropdown)
 
 @bot.command(name="criargrupo")
 async def criar_grupo(ctx):
@@ -231,62 +233,70 @@ async def criar_grupo(ctx):
 async def on_raw_reaction_add(payload):
     if payload.message_id != grupo_mensagem_id or payload.user_id == bot.user.id:
         return
+
     guild = bot.get_guild(payload.guild_id)
-    member = guild.get_member(payload.user_id)
-    if member is None:
-        member = await guild.fetch_member(payload.user_id)
+    member = guild.get_member(payload.user_id) or await guild.fetch_member(payload.user_id)
     nome = member.display_name
     emoji = str(payload.emoji)
-    role = None
-    if emoji == EMOJI_TANK:
-        role = "Tank"
-    elif emoji == EMOJI_HEALER:
-        role = "Healer"
-    elif emoji == EMOJI_DPS:
-        role = "DPS"
-    if role:
-        if len(inscritos[role]) >= LIMITES[role] and nome not in inscritos[role]:
-            channel = bot.get_channel(payload.channel_id)
-            mensagem = await channel.fetch_message(payload.message_id)
-            await mensagem.remove_reaction(emoji, member)
-            return
-        for r in inscritos:
-            if nome in inscritos[r]:
-                inscritos[r].remove(nome)
-        inscritos[role].append(nome)
+    role = {EMOJI_TANK: "Tank", EMOJI_HEALER: "Healer", EMOJI_DPS: "DPS"}.get(emoji)
+
+    if not role:
+        return
+
+    if len(inscritos[role]) >= LIMITES[role] and nome not in inscritos[role]:
         channel = bot.get_channel(payload.channel_id)
         mensagem = await channel.fetch_message(payload.message_id)
-        await mensagem.edit(embed=format_grupo_embed())
-        if role in CLASSES_POR_ROLE:
-            await channel.send(f"{member.mention}, escolhe a tua classe:", view=ClasseView(role, nome))
+        await mensagem.remove_reaction(emoji, member)
+        return
+
+    for r in inscritos:
+        if nome in inscritos[r]:
+            inscritos[r].remove(nome)
+    inscritos[role].append(nome)
+
+    canal = bot.get_channel(payload.channel_id)
+    mensagem = await canal.fetch_message(payload.message_id)
+    await mensagem.edit(embed=format_grupo_embed())
+
+    if role in CLASSES_POR_ROLE:
+        try:
+            dm_channel = await member.create_dm()
+            await dm_channel.send(f"Olá {member.display_name}, escolhe a tua classe para {role}:",
+                                  view=ClasseView(role, nome, payload.channel_id))
+        except discord.Forbidden:
+            await canal.send(f"{member.mention}, ativa as DMs para receber opções do bot.")
 
 @bot.event
 async def on_raw_reaction_remove(payload):
     if payload.message_id != grupo_mensagem_id or payload.user_id == bot.user.id:
         return
+
     guild = bot.get_guild(payload.guild_id)
-    member = guild.get_member(payload.user_id)
-    if member is None:
-        member = await guild.fetch_member(payload.user_id)
+    member = guild.get_member(payload.user_id) or await guild.fetch_member(payload.user_id)
     nome = member.display_name
     emoji = str(payload.emoji)
-    role = None
-    if emoji == EMOJI_TANK:
-        role = "Tank"
-    elif emoji == EMOJI_HEALER:
-        role = "Healer"
-    elif emoji == EMOJI_DPS:
-        role = "DPS"
+    role = {EMOJI_TANK: "Tank", EMOJI_HEALER: "Healer", EMOJI_DPS: "DPS"}.get(emoji)
+
     if role and nome in inscritos[role]:
         inscritos[role].remove(nome)
         classes_escolhidas.pop(nome, None)
         channel = bot.get_channel(payload.channel_id)
         mensagem = await channel.fetch_message(payload.message_id)
         await mensagem.edit(embed=format_grupo_embed())
+
         if role in CLASSES_POR_ROLE:
-            await channel.send(f"{member.mention}, escolhe a tua classe:", view=ClasseView(role, nome))
-        if (len(inscritos["Tank"]) == LIMITES["Tank"] and len(inscritos["Healer"]) == LIMITES["Healer"] and len(inscritos["DPS"]) == LIMITES["DPS"]):
+            try:
+                await member.send(f"Escolhe a tua classe:", view=ClasseView(role, nome))
+            except discord.Forbidden:
+                await channel.send(f"{member.mention}, ativa as DMs para escolher a classe.")
+
+        if (
+            len(inscritos["Tank"]) == LIMITES["Tank"]
+            and len(inscritos["Healer"]) == LIMITES["Healer"]
+            and len(inscritos["DPS"]) == LIMITES["DPS"]
+        ):
             await channel.send("🎉 Dungeon Encerrada! Parabéns <@Rixa>, felicidades 🎉")
+
 
 @bot.event
 async def on_ready():
