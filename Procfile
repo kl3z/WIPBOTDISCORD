@@ -1,1 +1,1 @@
-python3 WIPBOT.py
+python WIPBOT.py
