@@ -292,4 +292,4 @@ async def on_raw_reaction_remove(payload):
 async def on_ready():
     print(f"Bot ligado como {bot.user}")
 
-bot.run(os.getenv("DISCORD_TOKEN"))
+bot.run("MTQwMDE0MDg1MDAyOTEzMzgzNA.GH7f91.2vFILb9EkLsORfTBb6UhAieuzUFAQRU0uE4cG4")
