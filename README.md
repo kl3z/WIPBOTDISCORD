@@ -59,7 +59,7 @@ Este é um bot desenvolvido em Python com discord.py, desenhado para automatizar
 🚀 Como usar
 1. Cria um servidor com canal do tipo fórum chamado lfg
 
-2. Usa o comando /criargrupo ou !criargrupo para iniciar um novo grupo
+2. Usa o comando `/criargrupo` ou `!criargrupo` para iniciar um novo grupo
 
 3. Os jogadores devem escolher a role → classe → e ficam inscritos
 
@@ -68,6 +68,13 @@ Este é um bot desenvolvido em Python com discord.py, desenhado para automatizar
 📌 Exemplo visual
 
 <img width="743" height="647" alt="image" src="https://github.com/user-attachments/assets/105c68fc-2541-4c56-84b6-a4290999a97b" />
+
+5. Adicionalmente pode ser adicionado o bot num canal do discord e com o comando `/bot` ou `!bot` ele cria um post no forum lfg.
+   
+6. Com esta opção permite ainda ao user introduzir o tipo de stack que enventualmente poderá querer.
+
+<img width="694" height="215" alt="image" src="https://github.com/user-attachments/assets/9c171624-367f-427e-869f-b860776d5204" />
+
 
 🔐 Segurança
 - *O bot respeita os limites de cada role*
