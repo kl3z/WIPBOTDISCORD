@@ -1,96 +1,97 @@
-# World of Warcraft Dungeon Group Bot (WoW LFG Bot)
+World of Warcraft Dungeon Group Bot (WoW LFG Bot)
+This is a Python bot developed with discord.py, designed to automate and organize the creation of Mythic+ dungeon groups in Discord, simplifying the scheduling, sign-up, and player management process based on their roles and classes in World of Warcraft.
 
-Este é um bot desenvolvido em Python com discord.py, desenhado para automatizar e organizar a criação de grupos de dungeons míticas+ (Mythic+) no Discord, facilitando a marcação, inscrição e gestão de jogadores segundo as suas roles e classes no World of Warcraft.
+Main Features
+🎯 Group creation with interactive embed displaying:
 
-## Funcionalidades principais
+Selected dungeon
 
-🎯 Criação de Grupos com embed interativo que mostra:
+Keystone level (+X)
 
-- *Dungeon escolhida*
+Scheduled date and time
 
-- *Nível da chave (+X)*
+Dynamic player list by role and class
 
-- *Data e hora da marcação*
+🧩 Role signup (Tank, Healer, DPS) with automatic limits:
 
-- *Lista dinâmica de jogadores por role e classe*
+1 Tank
 
-🧩 Inscrição por Role (Tank, Healer, DPS) com limite automático:
+1 Healer
 
-- *1 Tank*
+3 DPS
 
-- *1 Healer*
+🧙 Class selection is only available after choosing a role, with specific icons and names for each specialization.
 
-- *3 DPS*
+⛔ Player lock system:
 
-  🧙 Escolha de Classe apenas após escolher a role, com ícones e nomes específicos de cada especialização.
+Only one player can sign up at a time.
 
-⛔ Sistema de bloqueio por jogador:
+The role selection process is blocked until the class is chosen.
 
-- *Apenas um jogador pode inscrever-se de cada vez.*
+🏰 Dungeon and Difficulty selection via dropdown menus (SelectDropdown):
 
-- *O processo de escolha de role é bloqueado até que a classe seja selecionada.*
+Configurable only once
 
-🏰 Seleção de Dungeon e Dificuldade com menus suspensos (SelectDropdown)
+The thread title is updated with the selected dungeon and difficulty
 
-- *Apenas configurável uma vez*
+📆 Date and Time setup via Modal:
 
-- *O título do post (thread) é atualizado com a dungeon e dificuldade*
+Ensures the groups are scheduled for future times
 
-📆 Definição de Data e Hora com Modal
+📬 Forum channel post creation:
 
-- *Garante que os grupos sejam marcados para o futuro*
+Allows threads to be created with custom names and deletes dropdowns after use
 
-📬 Criação de Posts no canal de fórum
+Command:
 
-- *Permite criar threads com nomes customizados e eliminar menus após uso*
-- *Comando*
+yaml
+Copy
+Edit
+  !bot  
+💡 Libraries Used
 
-        !bot  
+discord.py (Discord bot API)
 
-💡 Bibliotecas utilizadas
-- [discord.py](https://discordpy.readthedocs.io/en/stable/) (API de bots do Discord) 
+python-dotenv (Management of tokens and environment variables)
 
-- [python-dotenv](https://pypi.org/project/python-dotenv/) (Gestão de tokens e variáveis de ambiente)
+asyncio (Scheduled tasks like deleting threads)
 
-- [asyncio](https://docs.python.org/3/library/asyncio.html) (tarefas agendadas como apagar post)
+datetime (Date and time management)
 
-- [datetime](https://docs.python.org/3/library/datetime.html) (gestão de datas e marcações)
+🚀 How to Use
 
-🚀 Como usar
-1. Cria um servidor com canal do tipo fórum chamado lfg
+Create a server with a forum channel named lfg
 
-2. Usa o comando `/criargrupo` ou `!criargrupo` para iniciar um novo grupo
+Use the command /criargrupo or !criargrupo to start a new group:
 
-```bash
+bash
+Copy
+Edit
 !criargrupo
-```
+Players must choose their role → class → and they are signed up
 
-4. Os jogadores devem escolher a role → classe → e ficam inscritos
+Dungeon, difficulty, and date are selected through intuitive menus
 
-5. Dungeon, dificuldade e data são definidas com menus intuitivos
-
-📌 Exemplo visual
+📌 Visual Example
 
 <img width="743" height="647" alt="image" src="https://github.com/user-attachments/assets/105c68fc-2541-4c56-84b6-a4290999a97b" />
+Additionally, the bot can be added to a channel, and using the command /bot or !bot, it creates a post in the lfg forum:
 
-5. Adicionalmente pode ser adicionado o bot num canal do discord e com o comando `/bot` ou `!bot` ele cria um post no forum lfg.
-
-```bash
+bash
+Copy
+Edit
 !bot
-```
-   
-7. Com esta opção permite ainda ao user introduzir o tipo de stack que enventualmente poderá querer.
+This option also allows the user to select the type of stack they may want:
 
 <img width="694" height="215" alt="image" src="https://github.com/user-attachments/assets/9c171624-367f-427e-869f-b860776d5204" />
+🔐 Security
 
+The bot respects the limits for each role
 
-🔐 Segurança
-- *O bot respeita os limites de cada role*
+Prevents more than one player from selecting a role at the same time
 
-- *Impede que mais do que um jogador escolha role em simultâneo*
+Removes interaction elements after use to avoid spam
 
-- *Elimina interações após uso para evitar spam*
-
-👨‍💻 Desenvolvido por
-Kl3z – este projeto é open-source e pode ser adaptado para qualquer comunidade WoW.
+👨‍💻 Developed by
+Kl3z – This project is open-source and can be adapted for any WoW community.
 
