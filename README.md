@@ -22,7 +22,7 @@ Este é um bot desenvolvido em Python com discord.py, desenhado para automatizar
 
 - *3 DPS*
 
-      🧙 Escolha de Classe apenas após escolher a role, com ícones e nomes específicos de cada especialização.
+  🧙 Escolha de Classe apenas após escolher a role, com ícones e nomes específicos de cada especialização.
 
 ⛔ Sistema de bloqueio por jogador:
 
@@ -43,55 +43,38 @@ Este é um bot desenvolvido em Python com discord.py, desenhado para automatizar
 📬 Criação de Posts no canal de fórum
 
 - *Permite criar threads com nomes customizados e eliminar menus após uso*
+- *Comando*
 
-      *Comando !bot*  
+        !bot  
 
-💡 Tecnologias utilizadas
-discord.py (API de bots do Discord)
+💡 Bibliotecas utilizadas
+- [discord.py](https://discordpy.readthedocs.io/en/stable/) (API de bots do Discord) 
 
-python-dotenv (Gestão de tokens e variáveis de ambiente)
+- [python-dotenv](https://pypi.org/project/python-dotenv/) (Gestão de tokens e variáveis de ambiente)
 
-asyncio (tarefas agendadas como apagar post)
+- [asyncio](https://docs.python.org/3/library/asyncio.html) (tarefas agendadas como apagar post)
 
-datetime (gestão de datas e marcações)
-
-Discord UI components (botões, dropdowns, modals)
+- [datetime](https://docs.python.org/3/library/datetime.html) (gestão de datas e marcações)
 
 🚀 Como usar
-Cria um servidor com canal do tipo fórum chamado lfg
+1. Cria um servidor com canal do tipo fórum chamado lfg
 
-Usa o comando /criargrupo ou !criargrupo para iniciar um novo grupo
+2. Usa o comando /criargrupo ou !criargrupo para iniciar um novo grupo
 
-Os jogadores devem escolher a role → classe → e ficam inscritos
+3. Os jogadores devem escolher a role → classe → e ficam inscritos
 
-Dungeon, dificuldade e data são definidas com menus intuitivos
-
-O grupo é removido automaticamente 30 minutos após a hora da run
+4. Dungeon, dificuldade e data são definidas com menus intuitivos
 
 📌 Exemplo visual
-plaintext
-Copy
-Edit
-Dungeon: The Dawnbreaker
-Dificuldade: 12
-Marcação: 08/08/2025 às 21:30
 
-🛡️ Tank
-- João (Protection Paladin)
+<img width="743" height="647" alt="image" src="https://github.com/user-attachments/assets/105c68fc-2541-4c56-84b6-a4290999a97b" />
 
-💚 Healer
-- Maria (Restoration Druid)
-
-⚔️ DPS
-- Ana (Fire Mage)
-- Rui (Outlaw Rogue)
-- Pedro (Marksmanship Hunter)
 🔐 Segurança
-O bot respeita os limites de cada role
+- *O bot respeita os limites de cada role*
 
-Impede que mais do que um jogador escolha role em simultâneo
+- *Impede que mais do que um jogador escolha role em simultâneo*
 
-Elimina interações após uso para evitar spam
+- *Elimina interações após uso para evitar spam*
 
 👨‍💻 Desenvolvido por
 Kl3z – este projeto é open-source e pode ser adaptado para qualquer comunidade WoW.
