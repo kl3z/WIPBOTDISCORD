@@ -3,6 +3,7 @@
 This is a Python bot developed with discord.py, designed to automate and organize the creation of Mythic+ dungeon groups in Discord, simplifying the scheduling, sign-up, and player management process based on their roles and classes in World of Warcraft.
 
 ## Main Features
+
 ### 🎯 Group creation with interactive embed displaying:
 
 - *Selected dungeon*
