@@ -1,51 +1,50 @@
-#🧙 World of Warcraft Dungeon Group Bot (WoW LFG Bot)
+# World of Warcraft Dungeon Group Bot (WoW LFG Bot)
 
 Este é um bot desenvolvido em Python com discord.py, desenhado para automatizar e organizar a criação de grupos de dungeons míticas+ (Mythic+) no Discord, facilitando a marcação, inscrição e gestão de jogadores segundo as suas roles e classes no World of Warcraft.
 
-##⚙️ Funcionalidades principais
+## Funcionalidades principais
+
 🎯 Criação de Grupos com embed interativo que mostra:
 
-Dungeon escolhida
+- *Dungeon escolhida*
 
-Nível da chave (+X)
+- *Nível da chave (+X)*
 
-Data e hora da marcação
+- *Data e hora da marcação*
 
-Lista dinâmica de jogadores por role e classe
+- *Lista dinâmica de jogadores por role e classe*
 
 🧩 Inscrição por Role (Tank, Healer, DPS) com limite automático:
 
-1 Tank
+- *1 Tank*
 
-1 Healer
+- *1 Healer*
 
-3 DPS
+- *3 DPS*
 
-🧙 Escolha de Classe apenas após escolher a role, com ícones e nomes específicos de cada especialização.
+      🧙 Escolha de Classe apenas após escolher a role, com ícones e nomes específicos de cada especialização.
 
 ⛔ Sistema de bloqueio por jogador:
 
-Apenas um jogador pode inscrever-se de cada vez.
+- *Apenas um jogador pode inscrever-se de cada vez.*
 
-O processo de escolha de role é bloqueado até que a classe seja selecionada.
+- *O processo de escolha de role é bloqueado até que a classe seja selecionada.*
 
 🏰 Seleção de Dungeon e Dificuldade com menus suspensos (SelectDropdown)
 
-Apenas configurável uma vez
+- *Apenas configurável uma vez*
 
-O título do post (thread) é atualizado com a dungeon e dificuldade
+- *O título do post (thread) é atualizado com a dungeon e dificuldade*
 
 📆 Definição de Data e Hora com Modal
 
-Garante que os grupos sejam marcados para o futuro
-
-🧹 Autoapagamento do Post
-
-O post do grupo é automaticamente apagado 30 minutos após a hora marcada
+- *Garante que os grupos sejam marcados para o futuro*
 
 📬 Criação de Posts no canal de fórum
 
-Permite criar threads com nomes customizados e eliminar menus após uso
+- *Permite criar threads com nomes customizados e eliminar menus após uso*
+
+      *Comando !bot*  
 
 💡 Tecnologias utilizadas
 discord.py (API de bots do Discord)
