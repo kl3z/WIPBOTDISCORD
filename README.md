@@ -1,7 +1,8 @@
-🧙 World of Warcraft Dungeon Group Bot (WoW LFG Bot)
+#🧙 World of Warcraft Dungeon Group Bot (WoW LFG Bot)
+
 Este é um bot desenvolvido em Python com discord.py, desenhado para automatizar e organizar a criação de grupos de dungeons míticas+ (Mythic+) no Discord, facilitando a marcação, inscrição e gestão de jogadores segundo as suas roles e classes no World of Warcraft.
 
-⚙️ Funcionalidades principais
+##⚙️ Funcionalidades principais
 🎯 Criação de Grupos com embed interativo que mostra:
 
 Dungeon escolhida
