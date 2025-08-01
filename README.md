@@ -44,11 +44,10 @@ This is a Python bot developed with discord.py, designed to automate and organiz
 
 - *Allows threads to be created with custom names and deletes dropdowns after use*
 
-Command:
 
-
+```bash
   !bot  
-
+```
 
 ## 💡 Libraries Used
 
