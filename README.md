@@ -94,3 +94,5 @@ This option also allows the user to select the type of stack they may want:
 ## 👨‍💻 Developed by
 Kl3z – This project is open-source and can be adapted for any WoW community.
 
+[Bot](https://discord.com/oauth2/authorize?client_id=1400140850029133834&permissions=0&integration_type=0&scope=bot)
+
