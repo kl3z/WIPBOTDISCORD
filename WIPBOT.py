@@ -325,8 +325,6 @@ class RoleDropdown(Select):
             
         self.grupo.jogador_em_progresso = interaction.user.display_name
         role = self.values[0]
-        
-        # Remover jogador de qualquer role anterior
         for r in self.grupo.inscritos:
             if interaction.user.display_name in self.grupo.inscritos[r]:
                 self.grupo.inscritos[r].remove(interaction.user.display_name)
@@ -339,8 +337,7 @@ class RoleDropdown(Select):
                 await canal.join()
             
             await interaction.message.delete()
-            
-            # Usar self.grupo.mensagem_id em vez da variável global
+        
             mensagem = await canal.fetch_message(self.grupo.mensagem_id)
             await mensagem.edit(embed=self.grupo.format_grupo_embed())
             
@@ -365,8 +362,7 @@ class ClasseDropdown(Select):
     async def callback(self, interaction: discord.Interaction):
         self.grupo.classes_escolhidas[self.jogador] = self.values[0]
         canal = interaction.channel
-        
-        # Usar self.grupo.mensagem_id em vez da variável global
+    
         mensagem = await canal.fetch_message(self.grupo.mensagem_id)
         await mensagem.edit(embed=self.grupo.format_grupo_embed())
         
@@ -406,27 +402,19 @@ async def agendar_remocao_thread(thread: discord.Thread, data_str: str, hora_str
 
 @bot.command(name="criargrupo")
 async def criar_grupo(ctx):
-    # Verificar se o comando foi usado em um local válido
     if not (isinstance(ctx.channel, discord.ForumChannel) or 
             (isinstance(ctx.channel, discord.Thread) and 
              isinstance(ctx.channel.parent, discord.ForumChannel))):
         await ctx.send("❌ Este comando só pode ser usado em um canal de fórum ou em posts de fórum!", ephemeral=True)
         return
-    
-    # Determinar o canal de fórum principal
     forum_channel = ctx.channel if isinstance(ctx.channel, discord.ForumChannel) else ctx.channel.parent
-    
-    # Criar novo grupo
     novo_grupo = GrupoDungeon()
     
     try:
-        # Criar novo post no fórum com tags apropriadas
         tags = []
         dungeon_tag = discord.utils.get(forum_channel.available_tags, name=novo_grupo.dungeon_escolhida)
         if dungeon_tag:
             tags.append(dungeon_tag)
-        
-        # Criar o post no fórum
         thread, message = await forum_channel.create_thread(
             name=f"{novo_grupo.dungeon_escolhida} - Key {novo_grupo.dificuldade_escolhida}",
             content=f"Dungeon group created by {ctx.author.mention}",
@@ -434,20 +422,14 @@ async def criar_grupo(ctx):
             view=DungeonView(novo_grupo),
             applied_tags=tags
         )
-        
-        # Configurar o grupo
         novo_grupo.thread = thread
         novo_grupo.canal_id = thread.id
         novo_grupo.mensagem_id = message.id
         grupos_ativos[message.id] = novo_grupo
-        
-        # Enviar mensagem para escolher role
         await thread.send(
             f"{ctx.author.mention}, escolhe a tua **Role**:",
             view=RoleView(ctx.author.display_name, thread.id, message.id, novo_grupo)
         )
-        
-        # Agendar remoção automática
         asyncio.create_task(
             agendar_remocao_thread(
                 thread, 
@@ -455,9 +437,7 @@ async def criar_grupo(ctx):
                 novo_grupo.hora_escolhida
             )
         )
-        
-        # Confirmar criação
-        if ctx.channel.id != thread.id:  # Só responde se não estiver já na thread criada
+        if ctx.channel.id != thread.id: 
             await ctx.send(f"✅ Grupo criado com sucesso! {thread.mention}", ephemeral=True)
             
     except discord.HTTPException as e:
@@ -466,7 +446,7 @@ async def criar_grupo(ctx):
     except Exception as e:
         await ctx.send("❌ Ocorreu um erro inesperado ao criar o grupo.", ephemeral=True)
         print(f"Erro ao criar grupo: {e}")
-        if 'thread' in locals() and thread:  # Limpeza em caso de erro
+        if 'thread' in locals() and thread:  
             await thread.delete()
 
 class RoleView(View):
