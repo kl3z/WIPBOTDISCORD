@@ -83,6 +83,7 @@ Additionally, the bot can be added to a channel, and using the command /bot or !
 This option also allows the user to select the type of stack they may want:
 
 <img width="694" height="215" alt="image" src="https://github.com/user-attachments/assets/9c171624-367f-427e-869f-b860776d5204" />
+
 ## 🔐 Security
 
 - *The bot respects the limits for each role*
